@@ -1,25 +1,75 @@
 # SNLGAMING ESP32
 
-ESP32 handheld gaming firmware with a 128x64 SSD1306 OLED interface, games, apps, virtual pet, EEPROM storage and DFPlayer Mini support.
+<p align="center">
+  <img src="images/snlgaming.jpg" alt="SNLGAMING ESP32" width="500">
+</p>
 
-## Two firmware versions
+<p align="center">
+  ESP32 handheld gaming firmware with OLED UI, games, apps, virtual pet, EEPROM storage and DFPlayer Mini support.
+</p>
 
-This repository contains both firmware variants in one repository:
+---
 
-| Version | Folder | OLED SDA/SCL | Buttons |
-|---|---|---|---|
-| **SNLGAMING-ESP32** | `firmware/SNLGAMING-ESP32/` | GPIO 21 / 22 | UP 27, DOWN 26, SELECT 25, BACK 14, LEFT 32, RIGHT 33 |
-| **SNLGAMING-ESP32-OLED** | `firmware/SNLGAMING-ESP32-OLED/` | GPIO 5 / 4 | UP 13, DOWN 12, SELECT 15, BACK 16, LEFT 14, RIGHT 2 |
+## 🎮 About
 
-Both source files use a 128x64 SSD1306 display and I2C address `0x3C`.
+**SNLGAMING ESP32** is a handheld gaming project based on the ESP32.
 
-### Important hardware warning
+The project contains two firmware versions for different hardware configurations.
 
-In the **SNLGAMING-ESP32-OLED** source, `BTN_BACK` is GPIO16 and `DFPLAYER_RX` is also GPIO16. If your hardware uses DFPlayer Mini, this is a GPIO conflict. Do not wire both functions to GPIO16 without changing the firmware pin assignment and the corresponding wiring.
+The firmware includes games, applications, settings, a virtual pet, EEPROM data storage, OLED graphics and DFPlayer Mini audio support.
 
-## Features
+---
 
-### Games
+## 📦 Firmware versions
+
+### 1. SNLGAMING-ESP32
+
+**OLED:** SSD1306, 128×64, I2C `0x3C`  
+**SDA:** GPIO 21  
+**SCL:** GPIO 22
+
+| Button | GPIO |
+|---|---:|
+| UP | 27 |
+| DOWN | 26 |
+| SELECT | 25 |
+| BACK | 14 |
+| LEFT | 32 |
+| RIGHT | 33 |
+
+| Device | GPIO |
+|---|---:|
+| Speaker | 23 |
+| DFPlayer RX | 16 |
+| DFPlayer TX | 17 |
+
+### 2. SNLGAMING-ESP32-OLED
+
+**OLED:** SSD1306, 128×64, I2C `0x3C`  
+**SDA:** GPIO 5  
+**SCL:** GPIO 4
+
+| Button | GPIO |
+|---|---:|
+| UP | 13 |
+| DOWN | 12 |
+| SELECT | 15 |
+| BACK | 16 |
+| LEFT | 14 |
+| RIGHT | 2 |
+
+| Device | GPIO |
+|---|---:|
+| Speaker | 23 |
+| DFPlayer RX | 16 |
+| DFPlayer TX | 17 |
+
+> ⚠️ **Important:** In the `SNLGAMING-ESP32-OLED` version, GPIO 16 is used both for the BACK button and DFPlayer RX. This creates a GPIO conflict if both are used at the same time.
+
+---
+
+## 🕹️ Games
+
 - Snake
 - Pong
 - Racer
@@ -30,7 +80,8 @@ In the **SNLGAMING-ESP32-OLED** source, `BTN_BACK` is GPIO16 and `DFPLAYER_RX` i
 - Tanks
 - Tetris
 
-### Apps
+## 📱 Applications
+
 - Stopwatch
 - Flashlight
 - Calculator
@@ -40,109 +91,38 @@ In the **SNLGAMING-ESP32-OLED** source, `BTN_BACK` is GPIO16 and `DFPLAYER_RX` i
 - MP3 Player
 - 3D Render
 
-## Hardware
+## 🐾 Virtual Pet
 
-### Common
-- ESP32
-- SSD1306 OLED 128x64, I2C
-- 6 buttons
-- Speaker on GPIO23
-- Optional DFPlayer Mini
-- DFPlayer UART: RX GPIO16, TX GPIO17 in the source
-- 20 MP3 tracks are configured
+The main menu includes a **Pet** section. Pet data is stored in EEPROM.
 
-### Version 1: SNLGAMING-ESP32
+## ⚙️ Main Menu
 
-| Function | GPIO |
-|---|---:|
-| OLED SDA | 21 |
-| OLED SCL | 22 |
-| UP | 27 |
-| DOWN | 26 |
-| SELECT | 25 |
-| BACK | 14 |
-| LEFT | 32 |
-| RIGHT | 33 |
-| Speaker | 23 |
-| DFPlayer RX | 16 |
-| DFPlayer TX | 17 |
+- Games
+- Settings
+- Apps
+- Pet
 
-### Version 2: SNLGAMING-ESP32-OLED
+## 💾 EEPROM
 
-| Function | GPIO |
-|---|---:|
-| OLED SDA | 5 |
-| OLED SCL | 4 |
-| UP | 13 |
-| DOWN | 12 |
-| SELECT | 15 |
-| BACK | 16 |
-| LEFT | 14 |
-| RIGHT | 2 |
-| Speaker | 23 |
-| DFPlayer RX | 16 |
-| DFPlayer TX | 17 |
-
-## Arduino IDE
-
-1. Install Arduino IDE.
-2. Open **File → Preferences**.
-3. Add this URL to **Additional Boards Manager URLs**:
-
-   `https://espressif.github.io/arduino-esp32/package_esp32_index.json`
-
-4. Open **Tools → Board → Boards Manager**.
-5. Search for `esp32`.
-6. Install **esp32 by Espressif Systems**.
-7. Install these libraries from **Library Manager**:
-   - Adafruit GFX Library
-   - Adafruit SSD1306
-   - DFRobotDFPlayerMini
-
-## How to open each firmware
-
-Do not put both `.ino` files into the same Arduino sketch folder.
-
-Open:
-
-`firmware/SNLGAMING-ESP32/SNLGAMING-ESP32.ino`
-
-or:
-
-`firmware/SNLGAMING-ESP32-OLED/SNLGAMING-ESP32-OLED.ino`
-
-Then select your ESP32 board and COM/serial port and use **Verify** / **Upload**.
-
-## Repository structure
-
-```text
-SNLGAMING-ESP32/
-├── README.md
-├── .gitignore
-├── docs/
-│   └── wiring.md
-└── firmware/
-    ├── SNLGAMING-ESP32/
-    │   └── SNLGAMING-ESP32.ino
-    └── SNLGAMING-ESP32-OLED/
-        └── SNLGAMING-ESP32-OLED.ino
+```cpp
+EEPROM.begin(64);
 ```
 
-## MP3
+The firmware stores game records, settings and pet data.
 
-The firmware configures 20 MP3 tracks and initializes DFPlayer Mini through `Serial2` at 9600 baud.
+## 🔊 DFPlayer Mini
 
-## EEPROM
+```cpp
+Serial2.begin(9600, SERIAL_8N1, 16, 17);
+```
 
-The firmware stores game records and settings in EEPROM, including game high scores, theme/settings, pet data, boot settings and Tetris high score.
+```cpp
+#define MP3_TRACKS 20
+```
 
-## Controls
+Library: `DFRobotDFPlayerMini`.
 
-The six buttons are configured with `INPUT_PULLUP`, so the button input is active LOW.
-
-## Command line
-
-The firmware includes a command-line application with commands such as:
+## 💻 Command Line
 
 ```text
 snldo help
@@ -156,6 +136,79 @@ snldo reboot
 snldo code
 ```
 
-## License
+## 🔧 Required Libraries
 
-No license is declared in this repository. Add a license only if you have decided which license applies to your code and any included assets.
+- Adafruit GFX Library
+- Adafruit SSD1306
+- DFRobotDFPlayerMini
+- Wire
+- EEPROM
+- Arduino
+
+## 🛠️ Arduino IDE
+
+Add this ESP32 Boards Manager URL:
+
+```text
+https://espressif.github.io/arduino-esp32/package_esp32_index.json
+```
+
+Then install **esp32 by Espressif Systems** through Boards Manager.
+
+Install the required libraries through Library Manager.
+
+## 📂 Project Structure
+
+```text
+SNLGAMING-ESP32
+├── README.md
+├── .gitignore
+├── images
+│   └── snlgaming.jpg
+├── docs
+│   └── wiring.md
+├── firmware
+│   ├── SNLGAMING-ESP32
+│   │   └── SNLGAMING-ESP32.ino
+│   └── SNLGAMING-ESP32-OLED
+│       └── SNLGAMING-ESP32-OLED.ino
+├── snlfirmwaresps32.bin
+├── snlfirmwaresps32oled.bin
+├── код snlgaming esp32.txt
+└── код snlgaming esp32 oled.txt
+```
+
+## 📥 Firmware Files
+
+The repository contains precompiled `.bin` firmware files:
+
+- `snlfirmwaresps32.bin`
+- `snlfirmwaresps32oled.bin`
+
+## 📄 Source Code
+
+Original source `.txt` files are also included. Arduino-compatible `.ino` files are located in the `firmware` directory.
+
+## 🔌 Wiring
+
+Detailed wiring information:
+
+```text
+docs/wiring.md
+```
+
+## ⚠️ Hardware Compatibility
+
+Before flashing, check the GPIO configuration for the selected firmware version.
+
+## 📜 License
+
+No license has been declared for this project yet.
+
+---
+
+## 🚀 SNLGAMING
+
+**ESP32 • OLED • Games • Apps • Virtual Pet • Audio**
+
+Enjoy the project! 🎮
