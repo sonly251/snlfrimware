@@ -39,7 +39,7 @@ The firmware includes games, applications, settings, a virtual pet, EEPROM data 
 
 | Device | GPIO |
 |---|---:|
-| Speaker | 23 |
+| Speaker | 13 |
 | DFPlayer RX | 16 |
 | DFPlayer TX | 17 |
 
@@ -60,7 +60,7 @@ The firmware includes games, applications, settings, a virtual pet, EEPROM data 
 
 | Device | GPIO |
 |---|---:|
-| Speaker | 23 |
+| Speaker | 25 |
 | DFPlayer RX | 16 |
 | DFPlayer TX | 17 |
 
