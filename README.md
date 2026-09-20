@@ -64,7 +64,7 @@ The firmware includes games, applications, settings, a virtual pet, EEPROM data 
 | DFPlayer RX | 16 |
 | DFPlayer TX | 17 |
 
-> ⚠️ **Important:** In the `SNLGAMING-ESP32-OLED` version, GPIO 16 is used both for the BACK button and DFPlayer RX. This creates a GPIO conflict if both are used at the same time.
+
 
 ---
 
