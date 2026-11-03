@@ -1,6 +1,6 @@
 # SNL GAMING v10.0
 
-ESP32 firmware with games, apps, Wi-Fi tools, a virtual pet and a file manager.
+ESP32 firmware with games, apps, Wi-Fi tools, a virtual pet and an SD-card file manager.
 
 ## Games
 - Snake
@@ -29,17 +29,19 @@ ESP32 firmware with games, apps, Wi-Fi tools, a virtual pet and a file manager.
 - Paint
 
 ## Other features
-- Virtual pet with saved progress
+- Virtual pet
 - Wi-Fi scan and connection
 - Saved Wi-Fi networks
 - Weather
 - Web Remote
-- File manager: LittleFS and SD card
-- Text and HEX viewer
-- Bitmap viewer
-- File copy, move, rename and delete
-- Wi-Fi file upload
-- Themes, records and device information
+- SD-card file manager
+- Text and HEX file viewer
+- 128×64 bitmap viewer
+- Video playback from SD card
+- File information and deletion
+- File upload over Wi-Fi
+- Themes and records
+- Device information
 - Russian and English interface
 
 ## Firmware
