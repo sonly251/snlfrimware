@@ -1,0 +1,21 @@
+{
+  "version": "10.0",
+  "firmware": {
+    "ESP32": {
+      "merged": "SNL_GAMING_ESP32_v10.0_merged.bin",
+      "merged_size": 4194304,
+      "merged_sha256": "0581c9573a78218e35b58002387f906f857cba03d20116e8f7b5ddd0b2d79054",
+      "app": "SNL_GAMING_ESP32_v10.0_app-only.bin",
+      "app_size": 417664,
+      "app_sha256": "f571028cc245254a8ebfbfd5f58a6e3bea9fcf7f3791e2301776494e67e7a94d"
+    },
+    "ESP32_OLED": {
+      "merged": "SNL_GAMING_ESP32_OLED_v10.0_merged.bin",
+      "merged_size": 4194304,
+      "merged_sha256": "da1c14ceff26f755b9c15ba0672964df33aaca27bad1dba4bf87605799d77368",
+      "app": "SNL_GAMING_ESP32_OLED_v10.0_app-only.bin",
+      "app_size": 417664,
+      "app_sha256": "49365ad45412da1948429839e30466102e7be9b062fce9840f112fd7deacebf6"
+    }
+  }
+}

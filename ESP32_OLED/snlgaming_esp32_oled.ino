@@ -5,6 +5,15 @@
 #include "Arduino.h"
 #include "DFRobotDFPlayerMini.h"
 
+// ========== DOOM ==========
+#define LEVEL_WIDTH  64
+#define LEVEL_HEIGHT 57
+#define LEVEL_SIZE   (LEVEL_WIDTH/2*LEVEL_HEIGHT)
+#include "types.h"
+#include "entities.h"
+#include "level.h"
+#include "sprites.h"
+
 void initMP3Player();
 void updateDFPlayer();
 void runMP3Player();
@@ -13,19 +22,19 @@ void runMP3Player();
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
-#define OLED_SDA 21
-#define OLED_SCL 22
+#define OLED_SDA 5
+#define OLED_SCL 4
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 #define MP3_TRACKS 20  
 
 // Buttons
-#define BTN_UP 27
-#define BTN_DOWN 26
-#define BTN_SELECT 25
-#define BTN_BACK 14
-#define BTN_LEFT 32
-#define BTN_RIGHT 33
+#define BTN_UP 13
+#define BTN_DOWN 12
+#define BTN_SELECT 15
+#define BTN_BACK 16
+#define BTN_LEFT 14
+#define BTN_RIGHT 2
 
 // EEPROM addresses
 #define EE_SNAKE 0
@@ -47,6 +56,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define EE_BOOT_MUSIC 16
 #define EE_BOOT_SPEED 17
 #define EE_TETRIS_HIGH 18
+#define EE_DOOM 19
 
 #define SPEAKER_PIN 23
 
@@ -652,7 +662,7 @@ const unsigned char iconTetris[] PROGMEM = {
 enum MainState { STARTUP, MAIN_MENU, GAMES_MENU, SETTINGS_MENU, APPS_MENU,
                  SNAKE, PONG, CAR, DINO, SHOOTER, STOPWATCH, ABOUT, SHOW_RECORDS, THEME_SETTINGS,
                  FLAPPY, ARKANOID, TANKS, RANDOM_GEN, CODE_VIEWER, PET_MENU, PET_FEED, FLASHLIGHT, CALCULATOR,
-                 CMD_LINE, CMD_RESULT,SOUND_PAD, BOOT_SPEED_SETTINGS, MP3_PLAYER, RENDER_3D, TETRIS };
+                 CMD_LINE, CMD_RESULT,SOUND_PAD, BOOT_SPEED_SETTINGS, MP3_PLAYER, RENDER_3D, TETRIS, DOOM };
 MainState currentState = STARTUP;
 int submenuSelection = 0;
 int gamesPage = 0;
@@ -688,7 +698,7 @@ unsigned long lastAppsAnim = 0;
 bool appsAnimating = false;
 
 // ========== GAMES МЕНЮ (КАРУСЕЛЬ) ==========
-#define GAMES_ITEMS 9
+#define GAMES_ITEMS 10
 #define GAMES_ICON_SIZE 26
 const char* gamesNames[GAMES_ITEMS];
 const unsigned char* gamesIcons[GAMES_ITEMS];
@@ -880,6 +890,8 @@ unsigned long lastButtonPress = 0;
 
 // Theme
 bool whiteTheme = false;
+
+#include "doom.h"
 
 // High scores
 int highSnake = 0, highPong = 0, highCar = 0, highDino = 0, highShooter = 0;
@@ -1081,6 +1093,7 @@ void initEEPROM() {
     EEPROM.write(EE_ARKANOID, 0);
     EEPROM.write(EE_TANKS, 0);
     EEPROM.write(EE_TETRIS_HIGH, 0);  
+    EEPROM.write(EE_DOOM, 0);
     EEPROM.write(EE_THEME, 0);
     EEPROM.write(EE_RANDOM_MIN, 1);
     EEPROM.write(EE_RANDOM_MAX, 100);
@@ -1110,9 +1123,11 @@ void loadHighScores() {
   highArkanoid = EEPROM.read(EE_ARKANOID);
   highTanks = EEPROM.read(EE_TANKS);
   tetrisHighScore = EEPROM.read(EE_TETRIS_HIGH);
+  highDoom = EEPROM.read(EE_DOOM);
   
   // Валидация тетриса
   if (tetrisHighScore > 100) tetrisHighScore = 0;
+  if (highDoom > 255) highDoom = 0;
   
   whiteTheme = EEPROM.read(EE_THEME);
   randomMin = EEPROM.read(EE_RANDOM_MIN);
@@ -1645,6 +1660,7 @@ void gameOver(String game, int score, int eeAddr, int &highScore) {
   tankGameActive = false;
   sGameActive = false;
   tetrisActive = false;
+  doomActive = false;
   
   // ========== ДОБАВЛЯЕМ ОЧКИ ПИТОМЦУ ==========
   petScore += 10;
@@ -1766,6 +1782,7 @@ gamesNames[5] = "< FLAPPY BIRD >";
 gamesNames[6] = "< ARKANOID >";
 gamesNames[7] = "< TANKS >";
 gamesNames[8] = "< TETRIS >";
+gamesNames[9] = "< DOOM >";
 
 // Указатели на иконки
 gamesIcons[0] = iconSnake;
@@ -1777,6 +1794,7 @@ gamesIcons[5] = iconFlappy;
 gamesIcons[6] = iconArkanoid;
 gamesIcons[7] = iconTanks;
 gamesIcons[8] = iconTetris;
+gamesIcons[9] = iconDoom;
 
 // Инициализация SETTINGS меню
 settingsNames[0] = "< RECORDS >";
@@ -1920,7 +1938,7 @@ void loop() {
   // ========== ПАУЗА В ИГРАХ ==========
 if (currentState == SNAKE || currentState == PONG || currentState == CAR || 
     currentState == DINO || currentState == SHOOTER || currentState == FLAPPY || 
-    currentState == ARKANOID || currentState == TANKS || currentState == TETRIS) {
+    currentState == ARKANOID || currentState == TANKS || currentState == TETRIS || currentState == DOOM) {
   
   if (digitalRead(BTN_BACK) == LOW && millis() - lastButtonPress > DEBOUNCE_DELAY) {
     if (gamePaused) {
@@ -2045,6 +2063,7 @@ if (currentState == SNAKE || currentState == PONG || currentState == CAR ||
     case MP3_PLAYER: runMP3Player(); break;
     case RENDER_3D: runRender3D(); break;
     case TETRIS: runTetris(); break;
+    case DOOM: runDoom(); break;
     default: break;
   }
 }
@@ -2078,6 +2097,7 @@ void runGamesMenu() {
         case 6: initArkanoid(); changeState(ARKANOID); break;
         case 7: initTanks(); changeState(TANKS); break;
         case 8: initTetris(); changeState(TETRIS); break;
+        case 9: initDoom(); changeState(DOOM); break;
       }
       lastButtonPress = millis();
       return;
@@ -2366,6 +2386,7 @@ void showRecords() {
     display.setCursor(10, 44); display.print("TANKS:    "); display.println(highTanks);
   } else {
     display.setCursor(10, 14); display.print("TETRIS:   "); display.println(tetrisHighScore);
+    display.setCursor(10, 24); display.print("DOOM:     "); display.println(highDoom);
   }
   
   display.display();
